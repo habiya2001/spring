@@ -1,0 +1,32 @@
+[pom.xml] - https://mvnrepository.com/ 참고
+1. 스프링과 자바버전 변경-저장
+2. 프로젝트에서 Properities->Project facets, Java Compiler 버전변경
+3. Properities->Maven->Update Project 갱신
+4. junit 버전
+5. MySQL, MyBitis, spring-jdbc추가
+6. 프로젝트명에서 Run As 실행
+
+[web.xml] - 페이지 정보를 제공, 문자셋에 대한 정보 제공(java파일 대체)
+src\main\webapp\WEB-INF\web.xml
+1. 문자셋을 설정
+
+[root-context.xml - 데이베이스 설정
+beans-빈그룹
+bean-하나의 개체(데이터베이스, 컨트롤, DAO, DTO)->작업영역
+
+1. 데이터베이스 정보
+2. MyBatis 정보
+3. DAO 관련 
+4. src/main/java에 존재하는 패키지 정보
+5. resources폴더에 mybatis-config.xml 파일을 생성
+
+[servlet-context.xml]
+1. Controller에 대한 정보
+--------------------------------------------------
+[데이터베이스 작업]
+1. VO - getter, setter, 생성자
+2. mapper.xml파일을 이용해서 사용할 SQL를 작성
+3. DAO - 인터페이스, 상속받은 클래스(클래스명뒤에impl)
+
+
+

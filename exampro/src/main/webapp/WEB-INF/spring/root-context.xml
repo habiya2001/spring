@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 적용하고자 하는 패키지가 무엇인지 등록 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!--  데이터베이스 관련 정보를 설정 -->
+	<!-- 네임스페이스 bean, aop, context, mybatis, mysql, jdbc 하단탭에서 namespaces선택 -->
+	
+	<!-- bean을 통해서 각각의 패키지의 기본설정값을 저장 -->
+	<!-- class-사용할 클래스 id=빈이름 -->
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/> <!-- driverClassName에서 사용할 값 -->
+		<property name="url" value="jdbc:mysql://localhost:3306/spring"/> <!-- url에 사용할 값 -->
+		<property name="username" value="sample"/>
+		<property name="password" value="1234" />
+	</bean>	
+	
+	<!-- 위에 있는 데이터베이스와 MyBatis을 연동 SqlSessionFactory-->
+	sqlSessionFactory<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="dataSource" ref="dataSource"/> <!-- 위에 데이터베이스 id=dataSource를 연결 -->
+		<!-- mybatis 설정 파일의 위치 -->
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<!-- mybitis를 적용할 SQL가 있는 mapper파일의 위치 -->		
+		<property name="mapperLocations" value="classpath:/**/*/Mapper.xml"/> 
+	</bean>
+	
+	<!-- mybatis를 이용해서 DAO를 사용후 캐쉬를 지우는 빈스를 추가 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+
+	<!-- 스프링에서 사용할 사용자의 패키지를 등록(context) -->
+	<!--  기본 4개의 패키지(Controller패키지, DTO(VO, domain)패키지, DAO패키지, Service패키지) -->	
+	<!-- Controller-기본패키지, com.app.exampro.domain=>com.app.domain -->
+	<!-- 지정된 패키지에서 필요한 객체를 검색  -->	
+	<!-- 컨트롤 영역은 servlet-context.xml에서 지정 -->	
+	<context:component-scan base-package="com.app.exampro.dao"/> <!-- DAO -->
+	<context:component-scan base-package="com.app.exampro.domain"/> <!-- DTO -->
+	<context:component-scan base-package="com.app.exampro.service"/> <!-- Serivce -->
+</beans>
